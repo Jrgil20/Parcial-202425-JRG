@@ -75,6 +75,47 @@
                 color: #fff;
             }
 
+                .menu button {
+                    background-color: transparent;           
+                    border: none;
+                    color: #fff;
+                    font-size: 4rem;
+                    cursor: pointer;
+                    
+                }
+
+                .menu-items {
+                    display: none;
+                    position: absolute;
+                    background-color: #333;
+                    width: 100%;
+                    top: 100%;
+                    left: 0;
+                    z-index: 1;
+                }
+
+                    .menu-items.active {
+                        display: block;
+                    }
+
+                    .menu-list {
+                        list-style: none;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 10px;
+                    }
+
+                        .menu-list li {
+                            margin: 0 10px;
+                        }
+
+                            .menu-list li a {
+                                color: #fff;
+                                text-decoration: none;
+                                font-size: 1.5rem;
+                            }
+
         main {
             display: flex;
             flex-direction: column;
@@ -146,8 +187,15 @@
         <a href="https://github.com/Jrgil20" class="logo">JR</a>
         <h1 class="title">Piedra Papel o Tijeras</h1>
         <nav class="menu">
-            <i class="fas fa-bars" ></i>
-        </nav>
+            <button onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+            <div class="menu-items">
+                <ul class="menu-list">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
     </header>
 
     <main>
@@ -158,7 +206,7 @@
                 <p>¡Demuestra tus habilidades en este clásico juego de decisiones!</p>
                 <p> Elige entre piedra, papel o tijeras y desafía a tus amigos para ver quién es el mejor.</p>
                 <p>¡Diviértete y que gane el mejor!</p>
-                <button class="start-button">Iniciar Juego</button>
+                <button class="start-button"><i class="fas fa-play"></i> Iniciar Juego</button>
             </div>
         </section>
 
