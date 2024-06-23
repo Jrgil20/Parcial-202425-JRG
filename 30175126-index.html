@@ -126,6 +126,11 @@
             width: 100%;
         }
 
+        img {
+            width: 100px;
+            height: 100px;
+        }
+
             .hero {
                 background-color: #f0f0f0;
                 display: flex;
@@ -161,7 +166,97 @@
                         margin-top: 10px;
                         cursor: pointer;
                     }
+
+            .instructions {
+            color: #333;
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
+            }
+
+                .instructions h2 {
+                    font-size: 2.5rem;
+                    margin-bottom: 10px;
+                }
+
+                .instructions ol {
+                    list-style: none;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                    .instructions ol li {
+                        font-size: 1.5rem;
+                        margin: 10px 0;
+                    }
         
+            .name-avatar {
+                display: flexbox;
+                background-color: #f0f0f0;
+                text-align: center;
+                width: 100%;
+                padding: 10px;
+                margin-top: 10px;
+            }
+
+                .name-avatar form {
+                    display: inline;
+                }
+
+
+
+                .name-avatar .avatar {
+                    display: inline-block;
+                    margin: 10px 0;
+                }
+
+                    .avatar img {
+                        border-radius: 50%;
+                    }
+
+                    .avatar button {
+                        background-color: #333;
+                        color: #fff;
+                        font-size: 1rem;
+                        padding: 5px 10px;
+                        top: 50%;   
+                        border: none;
+                        border-radius: 5px;
+                        margin: 0 10px;
+                        cursor: pointer;
+                    }
+                    
+                    .modal {
+                        display: none; /* Oculto por defecto */
+                        position: fixed; /* Flotante */
+                        z-index: 1000; /* Sobre otros elementos */
+                        left: 0;
+                        top: 0;
+                        width: 100%; /* Ancho completo */
+                        height: 100%; /* Alto completo */
+                        overflow: auto; /* Habilita scroll si es necesario */
+                        background-color: rgba(0,0,0,0.4); /* Fondo negro semi-transparente */
+                    }
+
+                    .slider {
+                        display: flex;
+                        overflow-x: auto;
+                        scroll-snap-type: x mandatory;
+                        margin: 10% auto; /* 10% desde la parte superior y centrado horizontalmente */
+                        padding: 20px;
+                        width: 80%; /* Ancho del deslizador */
+                        background: white; /* Fondo blanco para el deslizador */
+                    }
+
+        .salto {
+            /* Estilos del salto */
+            height: 60px;
+            /* altura 100px */
+            }
+
+
         footer {
         /* Estilos del footer */
         position: fixed;
@@ -218,9 +313,90 @@
             </div>
         </section>
 
+        <section class="instructions" id="Instructions" >
+            <h2>Instrucciones</h2>
+            <ol>
+                <li>Elige tu avatar</li>
+                <li>Ingresa tu nombre</li>
+                <li>Comparte el ID de juego</li>
+                <li>Espera a que tu oponente se una al juego</li>
+                <li>¡Comienza a jugar y diviértete!</li>
+            </ol>
+        </section>
         
+        <section class="name-avatar">
+
+            <h2>Nombre y Avatar</h2>
+            
+            <div id="avatarModal" class="modal">
+                <!-- Deslizador de Imágenes -->
+                <div id="avatarSlider" class="slider"></div>
+            </div>
+            
+            <script>
+                function getAvatars() {
+                    fetch('https://parcial-202425-production.up.railway.app/games/avatars')
+                    .then(response => response.text()) // Obtiene la respuesta como texto
+                    .then(data => {
+                        // Convierte la cadena a un array de JavaScript
+                        const avatars = JSON.parse(data);
+                        const avatarList = document.getElementById('lista-avatares');
+                        // Itera sobre el array
+                        avatars.forEach(avatar => {
+                            const img = document.createElement('img');
+                            img.src = avatar; // Establece el src de la imagen al valor del avatar
+                            img.width = 100; // Establece el ancho de la imagen a 100 píxeles
+                            img.height = 100; // Establece el alto de la imagen a 100 píxeles
+                            img.classList.add('slide'); // Añade una clase para estilizar cada imagen si es necesario
+                            
+                            // Extrae el nombre del avatar de la URL
+                            const avatarName = avatar.split('=').pop();
+                            img.setAttribute('name', avatarName); // Añade un atributo name a la imagen con el nombre extraído
+                            
+                            img.addEventListener('click', () => {
+                                // Establece el valor del campo de entrada de nombre al nombre del avatar
+                                document.getElementById('name').value = avatarName;
+                                document.getElementById('avatarSelect').src = avatar; // Establece la imagen seleccionada como avatar
+                                hideModal(); // Oculta el modal
+                            });
+    
+                            // Añade el elemento de imagen al contenedor del deslizador
+                            document.getElementById('avatarSlider').appendChild(img);
+                        });
+                    })
+                    .catch(error => console.error('Error al cargar los avatares:', error));
+                }
+    
+                document.addEventListener('DOMContentLoaded', getAvatars);
+    
+                function showModal() {
+                    document.getElementById('avatarModal').style.display = 'block';
+                }
+    
+                function hideModal() {
+                        document.getElementById('avatarModal').style.display = 'none';
+                }
+            </script>
+
+            <form>
+                <div class="avatar" role="button" id="avatar-boton"  onclick="showModal()" >
+                    <button type="button"><i class="fas fa-chevron-left"></i></button>
+                    <img src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Bella" alt="Avatar image" id="avatarSelect">
+                    <button type="button"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
+                <div class="name">
+                    <input type="text" id="name"  name="name" required>
+                </div>
+
+                <button type="submit">Guardar</button>
+
+            </form>
+        </section>
 
     </main>
+
+    <div class="salto"></div>
 
     <footer>
         <p>Jesus Rodolfo Gil farias &copy; 2024</p>
