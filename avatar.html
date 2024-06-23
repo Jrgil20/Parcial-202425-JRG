@@ -44,12 +44,6 @@
                         cursor: pointer;
                     }
 
-                    .slider {
-                        display: flex;
-                        overflow-x: auto;
-                        scroll-snap-type: x mandatory;
-                    }
-
                     .modal {
                         display: none; /* Oculto por defecto */
                         position: fixed; /* Flotante */
@@ -63,6 +57,9 @@
                     }
 
                     .slider {
+                        display: flex;
+                        overflow-x: auto;
+                        scroll-snap-type: x mandatory;
                         margin: 10% auto; /* 10% desde la parte superior y centrado horizontalmente */
                         padding: 20px;
                         width: 80%; /* Ancho del deslizador */
@@ -133,11 +130,6 @@
                 <img src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Bella" alt="Avatar image" id="avatarSelect" >
                 <button type="button"><i class="fas fa-chevron-right"></i></button>
             </div>
-            <script>
-
-            </script>
-
-
             
             <div class="name">
                 <input type="text" id="name"  name="name" required>
