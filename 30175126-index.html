@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>JR | Rock, Paper or Scissor</title>
 
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
     <!-- Styles -->
     
     <style>
@@ -12,16 +15,50 @@
             background-color: grey;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             position: sticky;
+            display: flex;
+            justify-content: space-between;
             top: 0;
             width: 100%;
         }
 
         .logo {
             display: inline-block;
-            /* para que el logo se quede en la misma linea */
             color: #fff;
-            font-size: 60px;
+            font-size: 4rem;
+            @media screen and (max-width: 768px) {
+                font-size: 2rem;
+            }
+            @media screen and (max-width: 350px) {
+                font-size: 1.5rem;
+            }
             margin-left: 10px;
+        }
+
+        .title {
+            display: inline-block;
+            text-align: center;
+            color: #fff;
+            font-size: 2.5rem;
+            @media screen and (max-width: 768px) {
+                font-size: 2rem;
+            }
+            @media screen and (max-width: 350px) {
+                font-size: 1.5rem;
+            }
+            margin-left: 10px;
+        }
+
+        .menu {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 4rem;
+            @media screen and (max-width: 768px) {
+                font-size: 2rem;
+            }
+            @media screen and (max-width: 350px) {
+                font-size: 1.5rem;
+            }
+            color: #fff;
         }
 
         footer {
@@ -50,10 +87,14 @@
 <body>
     <header>
         <a href="https://github.com/Jrgil20" class="logo">JR</a>
+        <h1 class="title">Piedra Papel o Tijeras</h1>
+        <nav class="menu">
+            <i class="fas fa-bars" ></i>
+        </nav>
     </header>
 
     <main>
-
+            
     </main>
 
     <footer>
