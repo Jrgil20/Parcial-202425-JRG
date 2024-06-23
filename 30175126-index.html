@@ -205,13 +205,24 @@
                 .name-avatar .avatar {
                     display: inline-block;
                     margin: 10px 0;
-                    cursor: pointer;
                 }
 
                     .avatar img {
                         border-radius: 50%;
                         width: 100px;
                         height: 100px;
+                    }
+
+                    .avatar button {
+                        background-color: #333;
+                        color: #fff;
+                        font-size: 1rem;
+                        padding: 5px 10px;
+                        top: 50%;   
+                        border: none;
+                        border-radius: 5px;
+                        margin: 0 10px;
+                        cursor: pointer;
                     }
                     
                 
@@ -293,9 +304,12 @@
         <section class="name-avatar">
             <h2>Nombre y Avatar</h2>
             <form>
-                <div class="avatar">
-                    <img src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Bella" alt="Avatar image">
+                <div class="avatar" role="button" id="avatar-boton" >
+                    <button type="button"><i class="fas fa-chevron-left"></i></button>
+                    <img src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Bella" alt="Avatar image" >
+                    <button type="button"><i class="fas fa-chevron-right"></i></button>
                 </div>
+
                 
                 <div class="name">
                     <input type="text" id="name"  name="name" required>
