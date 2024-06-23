@@ -86,11 +86,13 @@
 
                 .menu-items {
                     display: none;
-                    position: absolute;
+                    position: fixed;
                     background-color: #333;
-                    width: 100%;
-                    top: 100%;
-                    left: 0;
+                    width: 30%;
+                    min-width: 180px;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
                     z-index: 1;
                 }
 
@@ -189,13 +191,19 @@
         <nav class="menu">
             <button onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
             <div class="menu-items">
+                <button onclick="toggleMenu()"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="title">Piedra Papel o Tijeras</h2>
                 <ul class="menu-list">
                     <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Contact</a></li>
+            
                 </ul>
             </div>
+            <script>
+                function toggleMenu() {
+                    document.querySelector('.menu-items').classList.toggle('active');
+                }
+            </script>
+        </nav>
     </header>
 
     <main>
