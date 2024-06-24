@@ -321,6 +321,34 @@
                             cursor: pointer;
                         }
 
+        .game-rules{
+            display: flexbox;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+            .game-rules h2 {
+                font-size: 2.5rem;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .game-rules ul {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+                .game-rules ul li {
+                    font-size: 1.5rem;
+                    margin: 10px 0;
+        }
+
         .RockPaperScissor {
             display: flex;
             justify-content: center;
@@ -451,12 +479,16 @@
                             
                             // Establece el primer avatar de la lista como valor por defecto
                             document.getElementById('avatarSelect').src = avatars[0];
+                            localStorage.setItem('avatar', avatars[0]);
                             document.getElementById('name').value = avatars[0].split('=').pop();
+                            localStorage.setItem('name', avatars[0].split('=').pop());
 
                             img.addEventListener('click', () => {
                                 // Establece el valor del campo de entrada de nombre al nombre del avatar
                                 document.getElementById('name').value = avatarName;
+                                localStorage.setItem('name', avatarName);
                                 document.getElementById('avatarSelect').src = avatar; // Establece la imagen seleccionada como avatar
+                                localStorage.setItem('avatar', avatar);
                                 hideModal(); // Oculta el modal
                             });
     
@@ -489,7 +521,20 @@
                     <input type="text" id="name"  name="name"  required>
                 </div>
 
+                <button type="submit">Guardar</button>
             </form>
+            <script> 
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.querySelector('.name-avatar form');
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const name = document.getElementById('name').value;
+                        const avatar = document.getElementById('avatarSelect').src;
+                        localStorage.setItem('name', name);
+                        localStorage.setItem('avatar', avatar);
+                    });
+                });
+            </script>
 
         </section>
 
@@ -594,9 +639,19 @@
             </form>
         </section>
 
+        <section class="game-rules">
+            <h2>Reglas del juego</h2>
+            <ul>
+                <li><i class="fas fa-hand-rock"></i> vs<i class="fas fa-hand-scissors"></i> = <i class="fas fa-hand-rock"></i></li>
+                <li><i class="fas fa-hand-scissors"></i> vs <i class="fas fa-hand-paper"></i> = <i class="fas fa-hand-scissors"></i></li>
+                <li><i class="fas fa-hand-paper"></i> vs <i class="fas fa-hand-rock"></i> = <i class="fas fa-hand-paper"></i></li>
+            </ul>
+        </section>
+
         <div class="modal " id="ModalRPS" >
             
             <div class="RockPaperScissor" id="RockPaperScissor">
+                
                 <section class="Partida">
                     <div class="Your">   
                         <img id="avatarRPS" >
@@ -616,13 +671,24 @@
                         <h2 id="NameOpoente" ></h2>
                     </div>
                 </section>
+                
             </div>
         </div>
         <script>
             function NuevoJuego() {
                 document.getElementById('ModalRPS').classList.toggle('active');
                 document.getElementById('ModalRPS').style.display = 'block';
+                Charater();
             }
+
+            function Charater(){
+                const nombre = localStorage.getItem('name');
+                const avatar = localStorage.getItem('avatar');
+                document.getElementById('NameRPS').textContent = nombre;
+                document.getElementById('avatarRPS').src = avatar;
+            }
+
+            
         </script>
 
     </main>
