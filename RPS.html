@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+        <!-- Styles -->
+
+    <style>
+        section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        div {
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div>   
+            <img src="avatar.jpg" alt="Your Avatar">
+            <h2>Your Name</h2>
+            <button onclick="chooseOption('R')"><i class="fas fa-hand-rock"></i></button>
+            <button onclick="chooseOption('P')"><i class="fas fa-hand-paper"></i></button>
+            <button onclick="chooseOption('S')"><i class="fas fa-hand-scissors"></i></button>
+        </div>
+        <div>
+            <h2>Opponent</h2>
+            <img src="opponent.jpg" alt="Opponent Avatar">
+            <h2>Opponent Name</h2>
+        </div>
+    </section>
+</body>
+</html>

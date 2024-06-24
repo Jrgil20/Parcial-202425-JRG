@@ -250,6 +250,99 @@
                         background: white; /* Fondo blanco para el deslizador */
                     }
 
+                    .avatar input {
+                            padding: 10px;
+                            font-size: 1.5rem;
+                            border: 1px solid #333;
+                            border-radius: 5px;
+                            margin-right: 10px;
+                        }
+                    
+
+        .Game-list {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+
+        }
+
+            #gamesContainer {
+            max-height: 500px; /* Altura máxima del contenedor */
+            overflow-y: auto; /* Habilita el desplazamiento vertical si el contenido excede la altura */
+            border: 1px solid #ccc; /* Opcional: añade un borde al contenedor */
+            }
+
+                table {
+                    border-collapse: collapse; /* Asegura que los bordes de la tabla se colapsen en uno solo */
+                    width: 100%; /* Establece el ancho de la tabla al 100% del contenedor */
+                }
+                th, td {
+                    border: 1px solid black; /* Añade un borde sólido a las celdas de la tabla */
+                    text-align: left; /* Alinea el texto a la izquierda */
+                    padding: 8px; /* Añade un relleno alrededor del texto en las celdas */
+                }
+                th {
+                    background-color: #f2f2f2; /* Establece un color de fondo para los encabezados de la tabla */
+                }
+                tr:nth-child(even) {
+                    background-color: #f9f9f9; /* Establece un color de fondo para las filas pares */
+                }
+        
+        .SearchGame {
+                display: flexbox;
+                background-color: #f0f0f0;
+                text-align: center;
+                width: 100%;
+                padding: 10px;
+                margin-top: 10px;
+            }
+                
+                    .SearchGame form {
+                        display: inline;
+                    }
+    
+                        .SearchGame input {
+                            padding: 10px;
+                            font-size: 1.5rem;
+                            border: 1px solid #333;
+                            border-radius: 5px;
+                            margin-right: 10px;
+                        }
+    
+                        .SearchGame button {
+                            background-color: #333;
+                            color: #fff;
+                            font-size: 1.5rem;
+                            padding: 10px 20px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+
+        .modal.RockPaperScissor {
+            display: none; /* Oculto por defecto */
+            position: fixed; /* Flotante */
+            z-index: 1000; /* Sobre otros elementos */
+            left: 0;
+            top: 0;
+            width: 100%; /* Ancho completo */
+            height: 100%; /* Alto completo */
+            overflow: auto; /* Habilita scroll si es necesario */
+            background-color: white; 
+        }
+
+            .Parrtida {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+                .Parrtida div {
+                    text-align: center;
+                }
+
         .salto {
             /* Estilos del salto */
             height: 60px;
@@ -309,7 +402,7 @@
                 <p>¡Demuestra tus habilidades en este clásico juego de decisiones!</p>
                 <p> Elige entre piedra, papel o tijeras y desafía a tus amigos para ver quién es el mejor.</p>
                 <p>¡Diviértete y que gane el mejor!</p>
-                <button class="start-button"><i class="fas fa-play"></i> Iniciar Juego</button>
+                <button class="start-button" onclick="NuevoJuego()"><i class="fas fa-play"></i> Iniciar Juego</button>
             </div>
         </section>
 
@@ -335,7 +428,12 @@
             
             <script>
                 function getAvatars() {
-                    fetch('https://parcial-202425-production.up.railway.app/games/avatars')
+                    fetch('https://parcial-202425-production.up.railway.app/games/avatars', {
+                        method: 'GET', // Método HTTP
+                        headers: {
+                            'Accept': 'application/json', // Indica el tipo de contenido que se espera recibir
+                        }
+                    })
                     .then(response => response.text()) // Obtiene la respuesta como texto
                     .then(data => {
                         // Convierte la cadena a un array de JavaScript
@@ -353,6 +451,10 @@
                             const avatarName = avatar.split('=').pop();
                             img.setAttribute('name', avatarName); // Añade un atributo name a la imagen con el nombre extraído
                             
+                            // Establece el primer avatar de la lista como valor por defecto
+                            document.getElementById('avatarSelect').src = avatars[0];
+                            document.getElementById('name').value = avatars[0].split('=').pop();
+
                             img.addEventListener('click', () => {
                                 // Establece el valor del campo de entrada de nombre al nombre del avatar
                                 document.getElementById('name').value = avatarName;
@@ -378,21 +480,149 @@
                 }
             </script>
 
-            <form>
+            <form >
                 <div class="avatar" role="button" id="avatar-boton"  onclick="showModal()" >
                     <button type="button"><i class="fas fa-chevron-left"></i></button>
-                    <img src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Bella" alt="Avatar image" id="avatarSelect">
+                    <img alt="Avatar image" id="avatarSelect">
                     <button type="button"><i class="fas fa-chevron-right"></i></button>
                 </div>
 
                 <div class="name">
-                    <input type="text" id="name"  name="name" required>
+                    <input type="text" id="name"  name="name"  required>
                 </div>
 
-                <button type="submit">Guardar</button>
+            </form>
 
+        </section>
+
+        <section class="Game-list">
+            <div id="gamesContainer">
+                <div id="games">
+                    <!-- La tabla se insertará aquí -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            fetch('https://parcial-202425-production.up.railway.app/games', {
+                                method: 'GET',
+                                headers: {
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(response => response.text())
+                            .then(text => JSON.parse(text))
+                            .then(data => {
+                                console.log('Success:', data);
+                                
+                                const gamesContainer = document.getElementById('games');
+                                gamesContainer.innerHTML = ''; // Limpia el contenedor
+                                
+                                // Crea la tabla y sus encabezados
+                                const table = document.createElement('table');
+                                const thead = document.createElement('thead');
+                                const tbody = document.createElement('tbody');
+                                table.appendChild(thead);
+                                table.appendChild(tbody);
+                
+                                // Define los encabezados de la tabla
+                                const headers = ['Game ID', 'Player1', 'Player2'];
+                                const trHead = document.createElement('tr');
+                                headers.forEach(headerText => {
+                                    const th = document.createElement('th');
+                                    th.textContent = headerText;
+                                    trHead.appendChild(th);
+                                });
+                                thead.appendChild(trHead);
+                
+                                // Llena la tabla solo con los datos de Game ID
+                                data.forEach(game => {
+                                    // Crea una fila nueva
+                                    const tr = document.createElement('tr');
+                                    
+                                    // Celda para el ID del juego
+                                    const gameIdCell = document.createElement('td');
+                                    gameIdCell.textContent = game.id;
+                                    tr.appendChild(gameIdCell);
+                                    
+                                    // Celda para Player1
+                                    const player1Cell = document.createElement('td');
+                                    if (game.info.players.length > 0) {
+                                        const player1Name = document.createTextNode(game.info.players[0].name);
+                                        const player1Avatar = document.createElement('img');
+                                        player1Avatar.src = game.info.players[0].avatar;
+                                        player1Avatar.alt = "Player 1 Avatar";
+                                        player1Avatar.style.borderRadius = '50%'; // Hace la imagen circular
+                                        player1Avatar.style.width = '25px'; // Ajusta el tamaño según necesites
+                                        player1Cell.appendChild(player1Avatar);
+                                        player1Cell.appendChild(player1Name);  
+                                    } else {
+                                        player1Cell.textContent = 'N/A';
+                                    }
+                                    tr.appendChild(player1Cell);
+                                    
+                                    // Celda para Player2
+                                    const player2Cell = document.createElement('td');
+                                    if (game.info.players.length > 1) {
+                                        const player2Name = document.createTextNode(game.info.players[1].name);
+                                        const player2Avatar = document.createElement('img');
+                                        player2Avatar.src = game.info.players[1].avatar;
+                                        player2Avatar.alt = "Player 2 Avatar";
+                                        player2Avatar.style.width = '25px'; // Ajusta el tamaño según necesites
+                                        player2Avatar.style.borderRadius = '50%'; // Hace la imagen circular
+                                        player2Cell.appendChild(player2Avatar);
+                                        player2Cell.appendChild(player2Name);
+                                    } else {
+                                        player2Cell.textContent = 'N/A';
+                                    }
+                                    tr.appendChild(player2Cell);
+                
+                    
+                
+                                    tbody.appendChild(tr);
+                                });
+                                // Añade la tabla al contenedor
+                                gamesContainer.appendChild(table);
+                            })
+                            .catch(error => console.error('Error:', error));
+                        });
+                    </script>
+                </div> 
+            </div>
+        </section>
+
+        <section class="SearchGame">
+            <h2>Unirse a Juego</h2>
+            <form>
+                <input type="text" id="gameId" name="gameId" placeholder="ID del Juego" required>
+                <button type="submit">Buscar</button>
             </form>
         </section>
+
+        <div class="modal RockPaperScissor" id="ModalRPS" >
+           
+            <div>
+                <section class="Partida">
+                    <div class="Your">   
+                        <img id="avatarRPS" >
+                        <h2 id="NameRPS" ></h2>
+
+
+                        <button onclick="chooseOption('R')"><i class="fas fa-hand-rock"></i></button>
+                        <button onclick="chooseOption('P')"><i class="fas fa-hand-paper"></i></button>
+                        <button onclick="chooseOption('S')"><i class="fas fa-hand-scissors"></i></button>
+                    </div>
+                    <div class="Opponent">
+                        <h2>Opponent</h2>
+                        <img src="opponent.jpg" alt="Opponent Avatar">
+                        <h2>Opponent Name</h2>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <script>
+            function NuevoJuego() {
+                document.querySelector('.RockPaperScissor').classList.toggle('active');
+                document.getElementById('ModalRPS').style.display = 'block';
+            }
+        </script>
 
     </main>
 
