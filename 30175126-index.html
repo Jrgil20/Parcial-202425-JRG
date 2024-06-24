@@ -425,6 +425,10 @@
 
             }
 
+                .jugadas{
+                    display: none;
+                }
+
                 .Partida div {
                     text-align: center;
                 }
@@ -434,7 +438,6 @@
             height: 60px;
             /* altura 100px */
             }
-
 
         footer {
         /* Estilos del footer */
@@ -742,10 +745,12 @@
                     <div class="Your">   
                         <img id="avatarRPS" >
                         <h2 id="NameRPS" ></h2>
+                        <div class="jugadas" id="jugadas" >
+                            <button onclick="chooseOption('R')"><i class="fas fa-hand-rock"></i></button>
+                            <button onclick="chooseOption('P')"><i class="fas fa-hand-paper"></i></button>
+                            <button onclick="chooseOption('S')"><i class="fas fa-hand-scissors"></i></button>
+                        </div>
 
-                        <button onclick="chooseOption('R')"><i class="fas fa-hand-rock"></i></button>
-                        <button onclick="chooseOption('P')"><i class="fas fa-hand-paper"></i></button>
-                        <button onclick="chooseOption('S')"><i class="fas fa-hand-scissors"></i></button>
                     </div>
                     
                     <div>
@@ -755,6 +760,7 @@
                     <div class="Opponent">
                         <img id="avatarOpoente" >
                         <h2 id="NameOpoente" ></h2>
+                        <p></p>
                     </div>
                 </section>
                 
@@ -783,6 +789,7 @@
                                 if (playerCount === 2) {
                                     clearInterval(interval);
                                     console.log('Other player has connected');
+                                    document.getElementById('jugadas').style.display = 'block';
                                     OpponentCharater(gameId);
                                 }
                             }
@@ -798,6 +805,7 @@
                     OpenRPSmodal();
                     document.getElementById('valorGameId').value = gameId;
                     copyToClipboard(gameId);
+                    document.getElementById('jugadas').style.display = 'block';
                     agregarJugador(gameId, localStorage.getItem('name'), localStorage.getItem('avatar'));
                     Charater();
                     OpponentCharater(gameId);
@@ -850,25 +858,30 @@
                 });
             }
 
-            function agregarJugador(gameId, nombreJugador, avatarJugador) {
-                fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}/players`, {
-                    method: 'POST', // Método HTTP
+            function chooseOption(gameId, jugada) {
+                const idplayer = localStorage.getItem('idJugador');
+                fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}/players/${idplayer}/play`, {
+                    method: 'PUT', // Método HTTP
                     headers: {
                         'Content-Type': 'application/json', // Indica el tipo de contenido que se está enviando
                     },
-                    body: JSON.stringify({
-                        name: nombreJugador, // Asume que esta es la variable para el nombre del jugador
-                        avatar: avatarJugador // Asume que esta es la variable para el avatar del jugador
-                    }) // Convierte el objeto a una cadena JSON para enviarlo
+                    body: JSON.stringify({next: jugada}) // Asegúrate de que la jugada se envía en el formato correcto
                 })
-                .then(response => response.json()) // Convierte la respuesta a JSON
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud: ' + response.statusText);
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    console.log('Success:', data); // Maneja el éxito
-                    localStorage.setItem('idJugador', data.id);
+                    // Maneja la respuesta del servidor
+                    if (data.message === "Waiting for the other player to play") {
+                        console.log("Esperando por la jugada del otro jugador.");
+                    } else {
+                        console.log("Resultado de la partida: ", data);
+                    }
                 })
-                .catch((error) => {
-                    console.error('Error:', error); // Maneja el error
-                });
+                .catch(error => console.error('Error:', error));
             }
 
             function copyToClipboard(gameId) {
@@ -911,6 +924,21 @@
                 document.getElementById('ModalRPS').style.display = 'none';
             }
             
+            function chooseOption(gameId,jugada){
+                const idplayer = localStorage.getItem('idJugador');
+                fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}/players/${idplayer}/play`, {
+                    method: 'PUT', // Método HTTP
+                    headers: {
+                        'Content-Type': 'application/json', // Indica el tipo de contenido que se está enviando
+                    },
+                    body: jso
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle the response data
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
             
         </script>
 
