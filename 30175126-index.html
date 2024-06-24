@@ -321,25 +321,23 @@
                             cursor: pointer;
                         }
 
-        .modal.RockPaperScissor {
-            display: none; /* Oculto por defecto */
-            position: fixed; /* Flotante */
-            z-index: 1000; /* Sobre otros elementos */
-            left: 0;
-            top: 0;
-            width: 100%; /* Ancho completo */
-            height: 100%; /* Alto completo */
-            overflow: auto; /* Habilita scroll si es necesario */
-            background-color: white; 
+        .RockPaperScissor {
+            display: flex;
+            justify-content: center;
+            margin: 15px;
+            border-radius: 5%;
+            align-items: center;
+            background-color: #f0f0f0;
         }
-
-            .Parrtida {
+            
+            .Partida {
                 display: flex;
-                justify-content: space-between;
-                align-items: center;
+                justify-content: space-around;
+                width: 90%;
+
             }
 
-                .Parrtida div {
+                .Partida div {
                     text-align: center;
                 }
 
@@ -596,30 +594,33 @@
             </form>
         </section>
 
-        <div class="modal RockPaperScissor" id="ModalRPS" >
-           
-            <div>
+        <div class="modal " id="ModalRPS" >
+            
+            <div class="RockPaperScissor" id="RockPaperScissor">
                 <section class="Partida">
                     <div class="Your">   
                         <img id="avatarRPS" >
                         <h2 id="NameRPS" ></h2>
 
-
                         <button onclick="chooseOption('R')"><i class="fas fa-hand-rock"></i></button>
                         <button onclick="chooseOption('P')"><i class="fas fa-hand-paper"></i></button>
                         <button onclick="chooseOption('S')"><i class="fas fa-hand-scissors"></i></button>
                     </div>
+                    
+                    <div>
+                        <h3>vs</h3>
+                    </div>
+                    
                     <div class="Opponent">
-                        <h2>Opponent</h2>
-                        <img src="opponent.jpg" alt="Opponent Avatar">
-                        <h2>Opponent Name</h2>
+                        <img id="avatarOpoente" >
+                        <h2 id="NameOpoente" ></h2>
                     </div>
                 </section>
             </div>
         </div>
         <script>
             function NuevoJuego() {
-                document.querySelector('.RockPaperScissor').classList.toggle('active');
+                document.getElementById('ModalRPS').classList.toggle('active');
                 document.getElementById('ModalRPS').style.display = 'block';
             }
         </script>
