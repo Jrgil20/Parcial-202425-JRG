@@ -772,11 +772,19 @@
                     fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}`)
                         .then(response => response.json())
                         .then(data => {
-                            if (data.players.length === 2) {
-                                clearInterval(interval);
-                                // Other player has connected, do something
-                                console.log('Other player has connected');
-                                OpponentCharater(gameId);
+                            // Verifica si data.players existe
+                            if (data.players) {
+                                // Cuenta manualmente los jugadores
+                                let playerCount = 0;
+                                for (let player of data.players) {
+                                    playerCount++;
+                                }
+                                // Si hay dos jugadores, procede
+                                if (playerCount === 2) {
+                                    clearInterval(interval);
+                                    console.log('Other player has connected');
+                                    OpponentCharater(gameId);
+                                }
                             }
                         })
                         .catch(error => {
@@ -810,6 +818,7 @@
                 document.getElementById('valorGameId').value =data.id;
                 agregarJugador(data.id, localStorage.getItem('name'), localStorage.getItem('avatar'));
                 copyToClipboard(data.id);
+                waitForOpponent(document.getElementById('valorGameId').value);
                 })
                 .catch((error) => {
                 console.error('Error:', error); // Maneja el error
