@@ -19,6 +19,33 @@
             box-sizing: border-box;
         } 
 
+        /* Establece un tamaño de fuente para pantallas muy pequeñas */
+        html {
+            font-size: 12px;
+        }
+
+        /* Ajusta el tamaño de la fuente para pantallas de tamaño medio (mayores o iguales a 320px) */
+        @media (min-width: 320px) {
+            html {
+                font-size: 13px;
+            }
+        }
+
+        /* Ajusta el tamaño de la fuente para pantallas más grandes (mayores o iguales a 720px) */
+        @media (min-width: 720px) {
+            html {
+                font-size: 14px;
+            }
+        }
+
+        /* Establece un tamaño de fuente máximo para pantallas muy grandes (mayores o iguales a 1200px) */
+        @media (min-width: 1200px) {
+            html {
+                font-size: 16px;
+            }
+        }
+
+
         header {
             background-color: grey;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -33,14 +60,6 @@
                 display: inline-block;
                 color: #fff;
                 font-size: 4rem;
-                /*
-                @media screen and (max-width: 768px) {
-                    font-size: 2rem;
-                }
-                @media screen and (max-width: 350px) {
-                    font-size: 1.5rem;
-                }
-                    */
                 margin-left: 10px;
             }
 
@@ -49,14 +68,6 @@
                 text-align: center;
                 color: #fff;
                 font-size: 2.5rem;
-                /*
-                @media screen and (max-width: 768px) {
-                    font-size: 2rem;
-                }
-                @media screen and (max-width: 350px) {
-                    font-size: 1.5rem;
-                }
-                    */
                 margin-left: 10px;
             }
 
@@ -64,14 +75,6 @@
                 display: inline-block;
                 margin-right: 10px;
                 font-size: 4rem;
-                /*
-                @media screen and (max-width: 768px) {
-                    font-size: 2rem;
-                }
-                @media screen and (max-width: 350px) {
-                    font-size: 1.5rem;
-                }
-                    */
                 color: #fff;
             }
 
@@ -350,18 +353,75 @@
         }
 
         .RockPaperScissor {
-            display: flex;
+            display: flexbox;
             justify-content: center;
             margin: 15px;
-            border-radius: 5%;
             align-items: center;
             background-color: #f0f0f0;
         }
+
+            .RockPaperScissor .encabezado {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                padding: 10px;
+            }
+
+                .RockPaperScissor .encabezado h2 {
+                    font-size: 1.5rem;
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+
+                .RockPaperScissor .encabezado button {
+                    background-color: #333;
+                    color: #fff;
+                    font-size: 0.5rem;
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+
+                    .RockPaperScissor .encabezado button:hover {
+                        background-color: red;
+                    }
+            
+            .GameId {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px 0px;
+            }
+
+                .GameId input {
+                    padding: 10px;
+                    font-size: 1rem;
+                    border: 1px solid #333;
+                    border-radius: 5px;
+                    margin-right: 10px;
+                }
+
+                .GameId button {
+                    background-color: #333;
+                    color: #fff;
+                    font-size: 1rem;
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+
+                    .GameId button:hover {
+                        background-color: #999;
+                        color: #333;
+                    }
             
             .Partida {
                 display: flex;
                 justify-content: space-around;
-                width: 90%;
+                width: 100%;
 
             }
 
@@ -634,9 +694,19 @@
         <section class="SearchGame">
             <h2>Unirse a Juego</h2>
             <form>
-                <input type="text" id="gameId" name="gameId" placeholder="ID del Juego" required>
+                <input type="text" id="UnirAGameId" name="gameId" placeholder="ID del Juego" required>
                 <button type="submit">Buscar</button>
             </form>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.querySelector('.SearchGame form');
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const gameId = document.getElementById('UnirAGameId').value;
+                        UnirseJuego(gameId);
+                    });
+                });
+            </script>
         </section>
 
         <section class="game-rules">
@@ -652,6 +722,22 @@
             
             <div class="RockPaperScissor" id="RockPaperScissor">
                 
+                
+                <div class="encabezado">
+                    <div></div>
+
+                    <h2>¡Piedra, Papel o Tijeras!</h2>
+                    
+                    <div>
+                        <button class="close-button" onclick="closeRPSModal()"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="GameId">
+                    <input type="text" id="valorGameId" name="gameId" placeholder="ID del Juego" readonly value="TuIDdeJuego" required>
+                    <button onclick="copyToClipboard(document.getElementById('valorGameId').value)">Copiar</button>
+                </div>
+
                 <section class="Partida">
                     <div class="Your">   
                         <img id="avatarRPS" >
@@ -676,9 +762,129 @@
         </div>
         <script>
             function NuevoJuego() {
-                document.getElementById('ModalRPS').classList.toggle('active');
-                document.getElementById('ModalRPS').style.display = 'block';
+                OpenRPSmodal();
+                createGame();
                 Charater();
+            }
+
+            function waitForOpponent(gameId) {
+                const interval = setInterval(() => {
+                    fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.players.length === 2) {
+                                clearInterval(interval);
+                                // Other player has connected, do something
+                                console.log('Other player has connected');
+                                OpponentCharater(gameId);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }, 1000); // Adjust the interval as needed
+            }
+
+            async function UnirseJuego(gameId){
+                if (await JuegoExiste(gameId)) { // Se agrega await aquí
+                    OpenRPSmodal();
+                    document.getElementById('valorGameId').value = gameId;
+                    copyToClipboard(gameId);
+                    agregarJugador(gameId, localStorage.getItem('name'), localStorage.getItem('avatar'));
+                    Charater();
+                    OpponentCharater(gameId);
+                }
+            }
+
+            function createGame(){
+                fetch('https://parcial-202425-production.up.railway.app/games', {
+                method: 'POST', // Método HTTP
+                headers: {
+                    'Content-Type': 'application/json', // Indica el tipo de contenido que se está enviando
+                }
+                // No se incluye body ya que no se enviarán datos
+                })
+                .then(response => response.json()) // Convierte la respuesta a JSON
+                .then(data => {
+                console.log('Success:', data); // Maneja el éxito
+                document.getElementById('valorGameId').value =data.id;
+                agregarJugador(data.id, localStorage.getItem('name'), localStorage.getItem('avatar'));
+                copyToClipboard(data.id);
+                })
+                .catch((error) => {
+                console.error('Error:', error); // Maneja el error
+                });
+            }
+
+            function JuegoExiste(gameId){
+                return fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}`, {
+                    method: 'GET', // Método HTTP
+                })
+                .then(response => response.json()) // Convierte la respuesta a JSON
+                .then(data => {
+                    if(data.error){
+                        alert("El juego no existe");
+                        return false;
+                    } else {
+                        if (data.players.length !== 1) {
+                            alert("El juego ya tiene dos jugadores");
+                            console.log(data);
+                            return false;
+                        } else {
+                            return true;
+                        }
+
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error); // Maneja el error
+                });
+            }
+
+            function agregarJugador(gameId, nombreJugador, avatarJugador) {
+                fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}/players`, {
+                    method: 'POST', // Método HTTP
+                    headers: {
+                        'Content-Type': 'application/json', // Indica el tipo de contenido que se está enviando
+                    },
+                    body: JSON.stringify({
+                        name: nombreJugador, // Asume que esta es la variable para el nombre del jugador
+                        avatar: avatarJugador // Asume que esta es la variable para el avatar del jugador
+                    }) // Convierte el objeto a una cadena JSON para enviarlo
+                })
+                .then(response => response.json()) // Convierte la respuesta a JSON
+                .then(data => {
+                    console.log('Success:', data); // Maneja el éxito
+                    localStorage.setItem('idJugador', data.id);
+                })
+                .catch((error) => {
+                    console.error('Error:', error); // Maneja el error
+                });
+            }
+
+            function copyToClipboard(gameId) {
+                navigator.clipboard.writeText(gameId).then(() => {
+                    alert("ID del juego copiado al portapapeles");
+                }).catch(err => {
+                    console.error("Error al copiar al portapapeles: ", err);
+                    // Considera una alternativa para navegadores que no soportan esta API
+                });
+            }
+
+            function OpponentCharater(gameId) {
+                fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}/players`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const currentPlayerId = localStorage.getItem('idJugador');
+                        const opponent = data.find(player => player.id !== currentPlayerId);
+                        if (opponent) {
+                            const nombre = opponent.name; 
+                            const avatar = opponent.avatar; 
+                            document.getElementById('NameOpoente').textContent = nombre;
+                            document.getElementById('avatarOpoente').src = avatar;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             }
 
             function Charater(){
@@ -688,6 +894,14 @@
                 document.getElementById('avatarRPS').src = avatar;
             }
 
+            function OpenRPSmodal(){
+                document.getElementById('ModalRPS').style.display = 'block';
+            }
+
+            function closeRPSModal(){
+                document.getElementById('ModalRPS').style.display = 'none';
+            }
+            
             
         </script>
 
