@@ -132,6 +132,7 @@
         img {
             width: 100px;
             height: 100px;
+            border-radius: 50%;
         }
 
             .hero {
@@ -653,7 +654,12 @@
                                     if (game.info.players.length > 0) {
                                         const player1Name = document.createTextNode(game.info.players[0].name);
                                         const player1Avatar = document.createElement('img');
-                                        player1Avatar.src = game.info.players[0].avatar;
+                                        // Verifica si avatar es una cadena y comienza con 'https'
+                                        if (typeof game.info.players[0].avatar === 'string' && game.info.players[0].avatar.startsWith('https')) {
+                                            player1Avatar.src = game.info.players[0].avatar;
+                                        } else {
+                                            player1Avatar.src = 'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=' + game.info.players[0].avatar; // URL de imagen por defecto
+                                        }
                                         player1Avatar.alt = "Player 1 Avatar";
                                         player1Avatar.style.borderRadius = '50%'; // Hace la imagen circular
                                         player1Avatar.style.width = '25px'; // Ajusta el tamaño según necesites
@@ -669,7 +675,11 @@
                                     if (game.info.players.length > 1) {
                                         const player2Name = document.createTextNode(game.info.players[1].name);
                                         const player2Avatar = document.createElement('img');
-                                        player2Avatar.src = game.info.players[1].avatar;
+                                        if (game.info.players[1].avatar.startsWith('https') ) {
+                                            player2Avatar.src = game.info.players[1].avatar;
+                                        } else {
+                                            player2Avatar.src = 'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=' + game.info.players[1].avatar; // URL de imagen por defecto
+                                        }
                                         player2Avatar.alt = "Player 2 Avatar";
                                         player2Avatar.style.width = '25px'; // Ajusta el tamaño según necesites
                                         player2Avatar.style.borderRadius = '50%'; // Hace la imagen circular
@@ -940,6 +950,27 @@
                     .catch(error => console.error('Error:', error));
             }
             
+            function agregarJugador(gameId, nombreJugador, avatarJugador) {
+                fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}/players`, {
+                    method: 'POST', // Método HTTP
+                    headers: {
+                        'Content-Type': 'application/json', // Indica el tipo de contenido que se está enviando
+                    },
+                    body: JSON.stringify({
+                        name: nombreJugador, // Asume que esta es la variable para el nombre del jugador
+                        avatar: avatarJugador // Asume que esta es la variable para el avatar del jugador
+                    }) // Convierte el objeto a una cadena JSON para enviarlo
+                })
+                .then(response => response.json()) // Convierte la respuesta a JSON
+                .then(data => {
+                    console.log('Success:', data); // Maneja el éxito
+                    localStorage.setItem('idJugador', data.id);
+                })
+                .catch((error) => {
+                    console.error('Error:', error); // Maneja el error
+                });
+            }
+
         </script>
 
     </main>
