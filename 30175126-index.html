@@ -435,9 +435,10 @@
                 }
 
                 .Resultado{
-                    display: flex;
+                    display: flexbox;
                     justify-content: center;
                     align-items: center;
+                    text-align: center;
                     width: 100%;
                     padding: 10px;
                 }
@@ -785,6 +786,7 @@
                 <section class="Resultado" id="Resultado">
                     <h3 id="MensajeResultado">
                     </h3>
+                    <div id="winner" ></div>
                 </section>
 
             </div>
@@ -984,9 +986,11 @@
                             console.log(' el ganador es ', data.winner.name);
                             const ganador = ' el ganador es ' + data.winner.name; // Asumiendo que data.winner.name es correcto
                             document.getElementById('MensajeResultado').textContent = ganador;
+                            generarTablaGanador(data.winner);
                         } else {
                             console.log(data.message);
                             document.getElementById('MensajeResultado').textContent = data.message;
+                            generarTablaGanador(data.winner);
                         }
                     }
 
@@ -1000,6 +1004,79 @@
                 // Para cerrar la conexión y dejar de recibir notificaciones
                 // eventSource.close();
             }
+
+            function generarTablaGanador(datosGanador) {
+                 // Vaciar el contenedor antes de añadir la nueva tabla
+                var contenedor = document.getElementById('winner');
+                contenedor.innerHTML = '';
+
+                
+                // Crear la tabla y el elemento thead
+                var tabla = document.createElement('table');
+                var thead = document.createElement('thead');
+                tabla.appendChild(thead);
+
+                // Crear el encabezado de la tabla
+                var encabezados = ['winner', 'Victorias', 'Derrotas', 'Empates'];
+                var trHead = document.createElement('tr');
+                encabezados.forEach(function(encabezado) {
+                    var th = document.createElement('th');
+                    th.textContent = encabezado;
+                    trHead.appendChild(th);
+                });
+                thead.appendChild(trHead);
+
+                // Crear el cuerpo de la tabla
+                var tbody = document.createElement('tbody');
+                var trBody = document.createElement('tr');
+
+                // Añadir el Nombre, Avatar e ID en la misma celda
+                var tdNombreAvatarId = document.createElement('td');
+
+                // Crear el elemento de texto para el nombre
+                var textoNombre = document.createElement('div'); // Usar div para permitir bloques de elementos
+                textoNombre.textContent = datosGanador.name;
+                tdNombreAvatarId.appendChild(textoNombre);
+
+                // Crear y configurar el elemento de imagen para el avatar
+                var imgAvatar = document.createElement('img');
+                imgAvatar.src = datosGanador.avatar;
+                imgAvatar.alt = 'Avatar';
+                imgAvatar.style.width = '50px'; // Ajusta el tamaño según necesites
+                imgAvatar.style.display = 'block'; // Hacer que la imagen ocupe su propia línea
+                imgAvatar.style.margin = '10px auto'; // Centrar la imagen horizontalmente
+                tdNombreAvatarId.appendChild(imgAvatar);
+
+                // Crear el elemento de texto para el ID
+                var textoId = document.createElement('div'); // Usar div para permitir bloques de elementos
+                textoId.textContent = "[id#" + datosGanador.id + "]";
+                tdNombreAvatarId.appendChild(textoId);
+
+                // Añadir la celda al cuerpo de la fila
+                trBody.appendChild(tdNombreAvatarId);
+
+                var tdVictorias = document.createElement('td');
+                tdVictorias.textContent = datosGanador.wins;
+                trBody.appendChild(tdVictorias);
+
+                var tdDerrotas = document.createElement('td');
+                tdDerrotas.textContent = datosGanador.loses;
+                trBody.appendChild(tdDerrotas);
+
+                var tdEmpates = document.createElement('td');
+                tdEmpates.textContent = datosGanador.ties;
+                trBody.appendChild(tdEmpates);
+
+                // Añadir la fila al cuerpo de la tabla y el cuerpo a la tabla
+                tbody.appendChild(trBody);
+                tabla.appendChild(tbody);
+
+                // Añadir la tabla al documento
+                // Reemplaza 'contenedorTabla' con el ID real del elemento donde quieras añadir la tabla
+                document.getElementById('winner').appendChild(tabla);
+            }
+
+            
 
         </script>
 
