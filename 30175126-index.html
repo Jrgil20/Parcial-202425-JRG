@@ -756,9 +756,9 @@
                         <img id="avatarRPS" >
                         <h2 id="NameRPS" ></h2>
                         <div class="jugadas" id="jugadas" >
-                            <button onclick="chooseOption('R')"><i class="fas fa-hand-rock"></i></button>
-                            <button onclick="chooseOption('P')"><i class="fas fa-hand-paper"></i></button>
-                            <button onclick="chooseOption('S')"><i class="fas fa-hand-scissors"></i></button>
+                            <button onclick="chooseOption(document.getElementById('valorGameId').value,'R')"><i class="fas fa-hand-rock"></i></button>
+                            <button onclick="chooseOption(document.getElementById('valorGameId').value,'P')"><i class="fas fa-hand-paper"></i></button>
+                            <button onclick="chooseOption(document.getElementById('valorGameId').value,'S')"><i class="fas fa-hand-scissors"></i></button>
                         </div>
 
                     </div>
@@ -774,6 +774,10 @@
                     </div>
                 </section>
                 
+                <section class="Resultado">
+                    
+                </section>
+
             </div>
         </div>
         <script>
@@ -934,20 +938,30 @@
                 document.getElementById('ModalRPS').style.display = 'none';
             }
             
-            function chooseOption(gameId,jugada){
+            function chooseOption(gameId, jugada) {
                 const idplayer = localStorage.getItem('idJugador');
                 fetch(`https://parcial-202425-production.up.railway.app/games/${gameId}/players/${idplayer}/play`, {
                     method: 'PUT', // Método HTTP
                     headers: {
                         'Content-Type': 'application/json', // Indica el tipo de contenido que se está enviando
                     },
-                    body: jso
+                    body: JSON.stringify({next: jugada}) // Asegúrate de que la jugada se envía en el formato correcto
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Handle the response data
-                    })
-                    .catch(error => console.error('Error:', error));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Maneja la respuesta del servidor
+                    if (data.message === "Waiting for the other player to play") {
+                        console.log("Esperando por la jugada del otro jugador.");
+                    } else {
+                        console.log("Resultado de la partida: ", data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
             }
             
             function agregarJugador(gameId, nombreJugador, avatarJugador) {
@@ -970,6 +984,8 @@
                     console.error('Error:', error); // Maneja el error
                 });
             }
+
+
 
         </script>
 
