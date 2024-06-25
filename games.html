@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        table {
+            border-collapse: collapse; /* Asegura que los bordes de la tabla se colapsen en uno solo */
+            width: 100%; /* Establece el ancho de la tabla al 100% del contenedor */
+        }
+        th, td {
+            border: 1px solid black; /* Añade un borde sólido a las celdas de la tabla */
+            text-align: left; /* Alinea el texto a la izquierda */
+            padding: 8px; /* Añade un relleno alrededor del texto en las celdas */
+        }
+        th {
+            background-color: #f2f2f2; /* Establece un color de fondo para los encabezados de la tabla */
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Establece un color de fondo para las filas pares */
+        }
+
+
+        #gamesContainer {
+        max-height: 500px; /* Altura máxima del contenedor */
+        overflow-y: auto; /* Habilita el desplazamiento vertical si el contenido excede la altura */
+        border: 1px solid #ccc; /* Opcional: añade un borde al contenedor */
+        }
+    </style>
+</head>
+<body>
+    <button class="start-button" id="startGameButton" ><i class="fas fa-play"></i> Iniciar Juego</button>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const startButton = document.getElementById('startGameButton');
+          
+          startButton.addEventListener('click', function() {
+            // Realiza la petición POST sin enviar datos
+            fetch('https://parcial-202425-production.up.railway.app/games', {
+              method: 'POST', // Método HTTP
+              headers: {
+                'Content-Type': 'application/json', // Indica el tipo de contenido que se está enviando
+              }
+              // No se incluye body ya que no se enviarán datos
+            })
+            .then(response => response.json()) // Convierte la respuesta a JSON
+            .then(data => {
+              console.log('Success:', data); // Maneja el éxito
+            })
+            .catch((error) => {
+              console.error('Error:', error); // Maneja el error
+            });
+          });
+        });
+      </script>
+
+
+    <div id="gamesContainer">
+        <div id="games"></div> <!-- La tabla se insertará aquí -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://parcial-202425-production.up.railway.app/games', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => response.text())
+            .then(text => JSON.parse(text))
+            .then(data => {
+                console.log('Success:', data);
+                
+                const gamesContainer = document.getElementById('games');
+                gamesContainer.innerHTML = ''; // Limpia el contenedor
+                
+                // Crea la tabla y sus encabezados
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                const tbody = document.createElement('tbody');
+                table.appendChild(thead);
+                table.appendChild(tbody);
+
+                // Define los encabezados de la tabla
+                const headers = ['Game ID', 'Player1', 'Player2'];
+                const trHead = document.createElement('tr');
+                headers.forEach(headerText => {
+                    const th = document.createElement('th');
+                    th.textContent = headerText;
+                    trHead.appendChild(th);
+                });
+                thead.appendChild(trHead);
+
+                // Llena la tabla solo con los datos de Game ID
+                data.forEach(game => {
+                    // Crea una fila nueva
+                    const tr = document.createElement('tr');
+                    
+                    // Celda para el ID del juego
+                    const gameIdCell = document.createElement('td');
+                    gameIdCell.textContent = game.id;
+                    tr.appendChild(gameIdCell);
+                    
+                    // Celda para Player1
+                    const player1Cell = document.createElement('td');
+                    if (game.info.players.length > 0) {
+                        const player1Name = document.createTextNode(game.info.players[0].name);
+                        const player1Avatar = document.createElement('img');
+                        player1Avatar.src = game.info.players[0].avatar;
+                        player1Avatar.alt = "Player 1 Avatar";
+                        player1Avatar.style.borderRadius = '50%'; // Hace la imagen circular
+                        player1Avatar.style.width = '25px'; // Ajusta el tamaño según necesites
+                        player1Cell.appendChild(player1Avatar);
+                        player1Cell.appendChild(player1Name);  
+                    } else {
+                        player1Cell.textContent = 'N/A';
+                    }
+                    tr.appendChild(player1Cell);
+                    
+                    // Celda para Player2
+                    const player2Cell = document.createElement('td');
+                    if (game.info.players.length > 1) {
+                        const player2Name = document.createTextNode(game.info.players[1].name);
+                        const player2Avatar = document.createElement('img');
+                        player2Avatar.src = game.info.players[1].avatar;
+                        player2Avatar.alt = "Player 2 Avatar";
+                        player2Avatar.style.width = '25px'; // Ajusta el tamaño según necesites
+                        player2Avatar.style.borderRadius = '50%'; // Hace la imagen circular
+                        player2Cell.appendChild(player2Avatar);
+                        player2Cell.appendChild(player2Name);
+                    } else {
+                        player2Cell.textContent = 'N/A';
+                    }
+                    tr.appendChild(player2Cell);
+
+    
+
+                    tbody.appendChild(tr);
+                });
+                // Añade la tabla al contenedor
+                gamesContainer.appendChild(table);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+</body>
+</html>
