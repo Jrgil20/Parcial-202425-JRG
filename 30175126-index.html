@@ -975,22 +975,22 @@
                 const eventSource = new EventSource(url);
 
                 eventSource.onmessage = function(event) {
-                    if (event.data.id == idJuego){
-                        console.log('Notificación recibida:', event.data);
-                        if (event.data.message.includes("There is no game associated with the provided gameId")) {
-                            console.log(' el ganador es ', event.data.winner.name);
-                            const ganador = ' el ganador es ' +event.data.message;
+                    // Convertir event.data de string a objeto JSON al inicio
+                    const data = JSON.parse(event.data);
+
+                    if (data.id == idJuego){
+                        console.log('Notificación recibida:', data);
+                        if (data.message && data.message.includes("There is no game associated with the provided gameId")) {
+                            console.log(' el ganador es ', data.winner.name);
+                            const ganador = ' el ganador es ' + data.winner.name; // Asumiendo que data.winner.name es correcto
                             document.getElementById('MensajeResultado').textContent = ganador;
                         } else {
-                            console.log(event.data.message);
-                            document.getElementById('MensajeResultado').textContent = event.data.message;
+                            console.log(data.message);
+                            document.getElementById('MensajeResultado').textContent = data.message;
                         }
                     }
 
-                    const data = JSON.parse(event.data);
-
                     // Aquí puedes actualizar tu UI o realizar otras acciones basadas en la notificación
-
                 };
 
                 eventSource.onerror = function(error) {
